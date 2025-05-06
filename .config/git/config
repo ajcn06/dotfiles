@@ -1,0 +1,17 @@
+[user]
+	name = Armando Calvo
+	email = armandocalvo06@gmail.com
+
+[core]
+	compression = 9
+	whitespace = error
+
+[init]
+	defaultBranch = develop
+
+
+[status]
+	branch = true
+	showStash = true
+	showUntrackedFiles = all
+	
