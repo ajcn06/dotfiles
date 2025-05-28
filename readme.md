@@ -24,3 +24,19 @@ sudo apt install stow
 cd dotfiles
 stow .
 ```
+
+## Install dependencies
+
+### zsh
+
+#### Linux
+
+Installation
+```bash
+sudo apt install zsh -y
+```
+
+Set as default terminal
+```bash
+chsh -s $(which zsh)
+```
