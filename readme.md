@@ -4,7 +4,7 @@
 - zsh
 - nvim
 - git
-
+- ghostty
 
 
 ## Install stow to manage the file deploy
@@ -12,11 +12,13 @@
 ### Mac OS
 ```bash
 brew install stow
+brew install ghostty
 ```
 
 ### Linux (debian base)
 ```bash
 sudo apt install stow
+sudo apt install ghostty
 ```
 
 ## Apply dotfiles installation
