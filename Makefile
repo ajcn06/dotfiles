@@ -3,7 +3,7 @@ DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
 BREW_PREFIX := $(shell test -x /home/linuxbrew/.linuxbrew/bin/brew && echo "/home/linuxbrew/.linuxbrew" || echo "$$HOME/.linuxbrew")
 
-COMMON_PACKAGES := stow lazygit lazydocker
+COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop
 
 ifeq ($(UNAME_S),Darwin)
   OS := macos
@@ -19,6 +19,7 @@ endif
 
 all: os-info brew-install common-packages-install link
 
+update: brew-update common-packages-install link
 
 brew-install:
 ifeq ($(OS),macos)
@@ -32,6 +33,8 @@ else
 	  echo "Instalando dependencias básicas..."; \
 	  if [ "$(DISTRO)" = "arch" ]; then \
 	    sudo pacman -Sy --noconfirm --needed base-devel curl git file; \
+	  elif [ "$(DISTRO)" = "ubuntu" ] || [ "$(DISTRO)" = "debian" ]; then \
+	    sudo apt update && sudo apt install -y build-essential curl git file; \
 	  else \
 	    echo "Distro no reconocida."; \
 	  fi; \

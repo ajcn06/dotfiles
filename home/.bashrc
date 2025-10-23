@@ -6,5 +6,8 @@ source ~/.local/share/omarchy/default/bash/rc
 #
 # Make an alias for invoking commands you use constantly
 alias ld='lazydocker'
-alias ll='ls -al'
+alias ls='lsd'
+alias ll='lsd -al'
 alias lg='lazygit'
+alias cat='bat'
+alias htop='btop'

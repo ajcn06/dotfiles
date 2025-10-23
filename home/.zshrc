@@ -52,9 +52,12 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 alias ld='lazydocker'
-alias ll='ls -al'
+alias ls='lsd'
+alias ll='lsd -al'
 alias lg='lazygit'
 alias ap='ansible-playbook'
+alias cat='bat'
+alias htop='btop'
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 fpath+=${ZDOTDIR:-~}/.zsh_functions
