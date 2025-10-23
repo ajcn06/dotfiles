@@ -30,13 +30,76 @@ install_package() {
     fi
 }
 
+install_homebrew() {
+    echo "Checking for Homebrew..."
+
+    if command -v brew >/dev/null 2>&1; then
+        echo "Homebrew is already installed."
+        return 0
+    fi
+
+    echo "Installing Homebrew..."
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add Homebrew to PATH for macOS
+        if [[ -x "/opt/homebrew/bin/brew" ]]; then
+            BREW_PATH="/opt/homebrew"
+        else
+            BREW_PATH="/usr/local"
+        fi
+
+        LINE='eval "$('$BREW_PATH'/bin/brew shellenv)"'
+    else
+        # Linux
+        echo "Installing build dependencies..."
+        if [[ -f /etc/os-release ]]; then
+            . /etc/os-release
+            if [[ "$ID" == "arch" ]]; then
+                sudo pacman -Sy --noconfirm --needed base-devel curl git file
+            elif [[ "$ID" == "ubuntu" ]] || [[ "$ID" == "debian" ]]; then
+                sudo apt update && sudo apt install -y build-essential curl git file
+            else
+                echo "Unsupported distribution for automatic dependency installation"
+            fi
+        fi
+
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add Homebrew to PATH for Linux
+        LINE='eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
+    fi
+
+    # Add to shell configuration files
+    for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
+        if [[ -f "$rc_file" ]]; then
+            if ! grep -qxF "$LINE" "$rc_file" 2>/dev/null; then
+                echo "$LINE" >> "$rc_file"
+                echo "Added Homebrew to $rc_file"
+            fi
+        fi
+    done
+
+    # Activate Homebrew in current session
+    eval "$LINE"
+
+    echo "Homebrew installed successfully!"
+}
+
+# Check and install git
 if ! command -v git >/dev/null 2>&1; then
     install_package "git"
 fi
 
+# Check and install make
 if ! command -v make >/dev/null 2>&1; then
     install_package "make"
 fi
+
+# Install Homebrew
+install_homebrew
 
 # Clone or update the dotfiles repository
 if [ -d "$DOTFILES_DIR" ]; then

@@ -1,7 +1,6 @@
 SHELL := /bin/bash
 DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
-BREW_PREFIX := $(shell test -x /home/linuxbrew/.linuxbrew/bin/brew && echo "/home/linuxbrew/.linuxbrew" || echo "$$HOME/.linuxbrew")
 
 COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop
 
@@ -16,41 +15,16 @@ else
   endif
 endif
 
-
-all: os-info brew-install common-packages-install link
+all: os-info check-brew common-packages-install link
 
 update: brew-update common-packages-install link
 
-brew-install:
-ifeq ($(OS),macos)
+check-brew:
 	@if ! command -v brew >/dev/null 2>&1; then \
-	  /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
-	else \
-	  echo "Homebrew ya instalado."; \
+	  echo "Error: Homebrew is not installed."; \
+	  echo "Please run ./install.sh first to install Homebrew."; \
+	  exit 1; \
 	fi
-else
-	@if ! command -v brew >/dev/null 2>&1; then \
-	  echo "Instalando dependencias básicas..."; \
-	  if [ "$(DISTRO)" = "arch" ]; then \
-	    sudo pacman -Sy --noconfirm --needed base-devel curl git file; \
-	  elif [ "$(DISTRO)" = "ubuntu" ] || [ "$(DISTRO)" = "debian" ]; then \
-	    sudo apt update && sudo apt install -y build-essential curl git file; \
-	  else \
-	    echo "Distro no reconocida."; \
-	  fi; \
-	  echo "Instalando Homebrew en Linux..."; \
-	  /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
-	  LINE='eval "$$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'; \
-
-	  grep -qxF "$$LINE" $$HOME/.bashrc 2>/dev/null || echo "$$LINE" >> $$HOME/.bashrc; \
-	  grep -qxF "$$LINE" $$HOME/.zshrc 2>/dev/null || echo "$$LINE" >> $$HOME/.zshrc; \
-
-	  eval "$$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; \
-	else \
-	  echo "Homebrew ya instalado."; \
-	fi
-endif
-
 
 os-info:
 	@echo "Detectado OS: $(OS)  DISTRO: $(DISTRO)"
@@ -62,7 +36,8 @@ brew-update:
 	@if command -v brew >/dev/null 2>&1; then \
 	  brew update && brew upgrade && brew cleanup; \
 	else \
-	  echo "Homebrew no está instalado. Ejecuta: make brew-install"; \
+	  echo "Homebrew no está instalado. Ejecuta: ./install.sh"; \
+	  exit 1; \
 	fi
 
 common-packages-install:
