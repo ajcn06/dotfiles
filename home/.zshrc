@@ -58,3 +58,4 @@ alias ap='ansible-playbook'
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 fpath+=${ZDOTDIR:-~}/.zsh_functions
+eval "$(brew shellenv)"

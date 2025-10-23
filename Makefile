@@ -1,6 +1,9 @@
 SHELL := /bin/bash
+DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
 BREW_PREFIX := $(shell test -x /home/linuxbrew/.linuxbrew/bin/brew && echo "/home/linuxbrew/.linuxbrew" || echo "$$HOME/.linuxbrew")
+
+COMMON_PACKAGES := stow lazygit lazydocker
 
 ifeq ($(UNAME_S),Darwin)
   OS := macos
@@ -14,10 +17,9 @@ else
 endif
 
 
-all: os-info
+all: os-info brew-install common-packages-install link
 
 
-.PHONY: brew-install
 brew-install:
 ifeq ($(OS),macos)
 	@if ! command -v brew >/dev/null 2>&1; then \
@@ -30,15 +32,8 @@ else
 	  echo "Instalando dependencias básicas..."; \
 	  if [ "$(DISTRO)" = "arch" ]; then \
 	    sudo pacman -Sy --noconfirm --needed base-devel curl git file; \
-	  elif [ "$(DISTRO)" = "ubuntu" ] || [ "$(DISTRO)" = "debian" ] || [ "$(DISTRO)" = "linuxmint" ]; then \
-	    sudo apt update && sudo apt install -y build-essential curl file git; \
-	  elif [ "$(DISTRO)" = "fedora" ]; then \
-	    sudo dnf install -y @development-tools curl file git; \
-	  elif [ "$(DISTRO)" = "rhel" ] || [ "$(DISTRO)" = "centos" ]; then \
-	    sudo yum groupinstall -y "Development Tools"; \
-	    sudo yum install -y curl file git; \
 	  else \
-	    echo "Distro no reconocida, instala manualmente las dependencias (curl, git, gcc, make)."; \
+	    echo "Distro no reconocida."; \
 	  fi; \
 	  echo "Instalando Homebrew en Linux..."; \
 	  /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
@@ -47,31 +42,30 @@ else
 	fi
 endif
 	@echo "Configurando shell..."
-	@if ! command -v brew >/dev/null 2>&1; then \
+	@if command -v brew >/dev/null 2>&1; then \
 	  BREW_PATH=$$(brew --prefix); \
-	  LINE='eval "$$($$BREW_PATH/bin/brew shellenv)"'; \
+	  LINE='eval "$$(brew shellenv)"'; \
 	  grep -qxF "$$LINE" $$HOME/.bashrc 2>/dev/null || echo "$$LINE" >> $$HOME/.bashrc; \
 	  grep -qxF "$$LINE" $$HOME/.zshrc 2>/dev/null || echo "$$LINE" >> $$HOME/.zshrc; \
 	  eval "$$($$BREW_PATH/bin/brew shellenv)"; \
 	fi
 	@echo "Homebrew instalado correctamente."
 
-.PHONY: os-info
 os-info:
 	@echo "Detectado OS: $(OS)  DISTRO: $(DISTRO)"
 	@if command -v brew >/dev/null 2>&1; then \
 	  brew --version | head -n 1; brew --prefix; \
-	else \
-	  echo "Homebrew no está instalado. Ejecuta: make brew-install"; \
 	fi
 
-# ------------------------
-# Actualizar Homebrew
-# ------------------------
-.PHONY: brew-update
 brew-update:
 	@if command -v brew >/dev/null 2>&1; then \
 	  brew update && brew upgrade && brew cleanup; \
 	else \
 	  echo "Homebrew no está instalado. Ejecuta: make brew-install"; \
 	fi
+
+common-packages-install:
+	brew install $(COMMON_PACKAGES)
+
+link:
+	stow --verbose --no-folding --target=$$HOME --dir=$(DIR) --restow home
