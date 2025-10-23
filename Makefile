@@ -2,7 +2,7 @@ SHELL := /bin/bash
 DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
 
-COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop
+COMMON_PACKAGES := zsh stow lazygit lazydocker lsd bat btop
 
 ifeq ($(UNAME_S),Darwin)
   OS := macos

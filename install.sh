@@ -89,7 +89,6 @@ install_homebrew() {
 }
 
 remove_conflict_files() {
-  [ -f ~/.bashrc ] && rm ~/.bashrc
   [ -f ~/.zshrc ] && rm ~/.zshrc
 }
 
