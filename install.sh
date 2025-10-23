@@ -89,8 +89,8 @@ install_homebrew() {
 }
 
 remove_conflict_files() {
-  rm ~/.bashrc
-  rm ~/.zshrc
+  [ -f ~/.bashrc ] && rm ~/.bashrc
+  [ -f ~/.zshrc ] && rm ~/.zshrc
 }
 
 # Check and install git
