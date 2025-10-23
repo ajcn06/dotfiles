@@ -15,9 +15,9 @@ else
   endif
 endif
 
-all: os-info check-brew common-packages-install link add-aliases
+all: os-info check-brew common-packages-install add-aliases link
 
-update: brew-update common-packages-install link add-aliases
+update: brew-update common-packages-install add-aliases link
 
 check-brew:
 	@if ! command -v brew >/dev/null 2>&1; then \
@@ -44,27 +44,16 @@ common-packages-install:
 	brew install $(COMMON_PACKAGES)
 
 link:
-	stow --verbose --no-folding --target=$$HOME --dir=$(DIR) --restow home
+	stow --no-folding --target=$$HOME --dir=$(DIR) --restow home
 
 add-aliases:
-	@if [ -f "$(DIR)/aliases.txt" ]; then \
-	  for rc_file in $$HOME/.bashrc $$HOME/.zshrc; do \
-	    [ ! -f "$$rc_file" ] && touch "$$rc_file"; \
-	    added=0; \
-	    echo "" >> "$$rc_file"; \
-	    while IFS= read -r line || [ -n "$$line" ]; do \
-	      [ -z "$$line" ] && continue; \
-	      if ! grep -qxF "$$line" "$$rc_file" 2>/dev/null; then \
-	        echo "$$line" >> "$$rc_file"; \
-	        added=$$((added + 1)); \
-	      fi; \
-	    done < "$(DIR)/aliases.txt"; \
-	    if [ $$added -gt 0 ]; then \
-	      echo "Added $$added to $$rc_file"; \
-	    else \
-	      echo "✓ All aliases in $$rc_file"; \
-	    fi; \
-	  done; \
-	else \
-	  echo "aliases.txt not found in $(DIR)"; \
-	fi
+	@for rc_file in $$HOME/.bashrc $$HOME/.zshrc; do \
+	  [ ! -f "$$rc_file" ] && touch "$$rc_file"; \
+	  include_block="if [ -f \$${HOME}/.bash_aliases ]; then  . \$${HOME}/.bash_aliases; fi"; \
+	  if grep -q '.bash_aliases' "$$rc_file" 2>/dev/null; then \
+	    echo "✓ $$rc_file already sources .bash_aliases"; \
+	  else \
+	    printf "\n%s\n" "$$include_block" >> "$$rc_file"; \
+	    echo "→ Added .bash_aliases include block to $$rc_file"; \
+	  fi; \
+	done
