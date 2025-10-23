@@ -51,14 +51,6 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-alias ld='lazydocker'
-alias ls='lsd'
-alias ll='lsd -al'
-alias lg='lazygit'
-alias ap='ansible-playbook'
-alias cat='bat'
-alias htop='btop'
-
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 eval "$(brew shellenv)"
