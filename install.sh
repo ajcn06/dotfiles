@@ -88,9 +88,6 @@ install_homebrew() {
     echo "Homebrew installed successfully!"
 }
 
-remove_conflict_files() {
-  [ -f ~/.zshrc ] && rm ~/.zshrc
-}
 
 # Check and install git
 if ! command -v git >/dev/null 2>&1; then
@@ -117,7 +114,6 @@ else
     cd "$DOTFILES_DIR"
 fi
 
-remove_conflict_files
 
 # Run the Makefile
 echo "Running Makefile..."
