@@ -88,6 +88,27 @@ install_homebrew() {
     echo "Homebrew installed successfully!"
 }
 
+set_zsh_as_default() {
+    ZSH_PATH=$(command -v zsh)
+
+    if [ -z "$ZSH_PATH" ]; then
+        echo "Error: zsh not installed."
+        return 1
+    fi
+
+    if [ "$SHELL" = "$ZSH_PATH" ]; then
+        echo "zsh is your default terminal."
+        return 0
+    fi
+
+    if ! grep -qxF "$ZSH_PATH" /etc/shells 2>/dev/null; then
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells > /dev/null
+    fi
+
+    chsh -s "$ZSH_PATH"
+
+    echo "¡Shell updated to zsh!"
+}
 
 # Check and install git
 if ! command -v git >/dev/null 2>&1; then
@@ -115,9 +136,10 @@ else
 fi
 
 
-# Run the Makefile
 echo "Running Makefile..."
 make all
+
+set_zsh_as_default
 
 echo ""
 echo "Installation complete!"
