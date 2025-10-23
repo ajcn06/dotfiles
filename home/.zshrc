@@ -54,7 +54,7 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 fpath+=${ZDOTDIR:-~}/.zsh_functions
 
-if [ -f /home/linuxbrew/.linuxbrew/bin/brew shellenv ]; then
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
