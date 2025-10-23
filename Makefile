@@ -2,7 +2,7 @@ SHELL := /bin/bash
 DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
 
-COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop neovim
+COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop neovim fastfetch
 
 ifeq ($(UNAME_S),Darwin)
   OS := macos
@@ -51,6 +51,7 @@ add-aliases:
 	  for rc_file in $$HOME/.bashrc $$HOME/.zshrc; do \
 	    [ ! -f "$$rc_file" ] && touch "$$rc_file"; \
 	    added=0; \
+	    echo "" >> "$$rc_file"; \
 	    while IFS= read -r line || [ -n "$$line" ]; do \
 	      [ -z "$$line" ] && continue; \
 	      if ! grep -qxF "$$line" "$$rc_file" 2>/dev/null; then \

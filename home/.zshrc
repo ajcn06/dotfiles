@@ -53,4 +53,13 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 fpath+=${ZDOTDIR:-~}/.zsh_functions
+
 eval "$(brew shellenv)"
+
+alias ld='lazydocker'
+alias ls='lsd'
+alias ll='lsd -al'
+alias lg='lazygit'
+alias ap='ansible-playbook'
+alias cat='bat'
+alias htop='btop'
