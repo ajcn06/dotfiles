@@ -2,7 +2,7 @@ SHELL := /bin/bash
 DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 UNAME_S := $(shell uname -s)
 
-COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop
+COMMON_PACKAGES := stow lazygit lazydocker lsd bat btop neovim
 
 ifeq ($(UNAME_S),Darwin)
   OS := macos
@@ -48,7 +48,6 @@ link:
 
 add-aliases:
 	@if [ -f "$(DIR)/aliases.txt" ]; then \
-	  echo "Agregando aliases desde aliases.txt..."; \
 	  for rc_file in $$HOME/.bashrc $$HOME/.zshrc; do \
 	    [ ! -f "$$rc_file" ] && touch "$$rc_file"; \
 	    added=0; \
@@ -60,11 +59,11 @@ add-aliases:
 	      fi; \
 	    done < "$(DIR)/aliases.txt"; \
 	    if [ $$added -gt 0 ]; then \
-	      echo "✓ Agregadas $$added líneas a $$rc_file"; \
+	      echo "Added $$added to $$rc_file"; \
 	    else \
-	      echo "✓ Todos los aliases ya existen en $$rc_file"; \
+	      echo "✓ All aliases in $$rc_file"; \
 	    fi; \
 	  done; \
 	else \
-	  echo "Archivo aliases.txt no encontrado en $(DIR)"; \
+	  echo "aliases.txt not found in $(DIR)"; \
 	fi
