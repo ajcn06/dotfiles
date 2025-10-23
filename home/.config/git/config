@@ -15,3 +15,5 @@
 	showStash = true
 	showUntrackedFiles = all
 	
+[pull]
+	rebase = false
