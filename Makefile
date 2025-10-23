@@ -41,10 +41,11 @@ else
 	  echo "Instalando Homebrew en Linux..."; \
 	  /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
 	  LINE='eval "$$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'; \
+
 	  grep -qxF "$$LINE" $$HOME/.bashrc 2>/dev/null || echo "$$LINE" >> $$HOME/.bashrc; \
 	  grep -qxF "$$LINE" $$HOME/.zshrc 2>/dev/null || echo "$$LINE" >> $$HOME/.zshrc; \
-	  $LINE; \
 
+	  eval "$$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"; \
 	else \
 	  echo "Homebrew ya instalado."; \
 	fi
