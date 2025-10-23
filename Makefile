@@ -15,9 +15,9 @@ else
   endif
 endif
 
-all: os-info check-brew common-packages-install add-aliases link
+all: os-info check-brew common-packages-install link add-aliases set-zsh
 
-update: brew-update common-packages-install add-aliases link
+update: brew-update common-packages-install link add-aliases set-zsh
 
 check-brew:
 	@if ! command -v brew >/dev/null 2>&1; then \
@@ -57,3 +57,16 @@ add-aliases:
 	    echo "→ Added .bash_aliases include block to $$rc_file"; \
 	  fi; \
 	done
+
+set-zsh:
+	@if command -v zsh >/dev/null 2>&1; then \
+	  ZSH_PATH=$$(command -v zsh); \
+	  echo "→ Setting default shell to $$ZSH_PATH for $$USER"; \
+	  if ! grep -qxF "$$ZSH_PATH" /etc/shells; then \
+	    echo "$$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null; \
+	  fi; \
+	  sudo chsh -s "$$ZSH_PATH" "$$USER"; \
+	  echo "Default shell set to Zsh"; \
+	else \
+	  echo "Zsh not found — please install it first."; \
+	fi
