@@ -63,3 +63,4 @@ alias lg='lazygit'
 alias ap='ansible-playbook'
 alias cat='bat'
 alias htop='btop'
+
